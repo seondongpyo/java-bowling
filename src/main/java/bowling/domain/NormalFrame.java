@@ -5,22 +5,19 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public class NormalFrame {
+public class NormalFrame implements Frame {
 
     private static final int MAX_PINS_COUNT = 10;
 
     private final int number;
     private final List<PitchResult> results;
 
-    public NormalFrame(int number, List<PitchResult> results) {
-        this.number = number;
-        this.results = results;
-    }
-
     public NormalFrame(int number) {
-        this(number, new ArrayList<>());
+        this.number = number;
+        this.results = new ArrayList<>();
     }
 
+    @Override
     public void bowl(int fallenPins) {
         if (isEnd()) {
             throw new IllegalArgumentException();
@@ -42,6 +39,7 @@ public class NormalFrame {
         return totalPins() + fallenPins > MAX_PINS_COUNT;
     }
 
+    @Override
     public boolean isEnd() {
         return hasStrike() || results.size() == 2;
     }
@@ -54,20 +52,18 @@ public class NormalFrame {
         return results.contains(PitchResult.of(MAX_PINS_COUNT));
     }
 
-    private boolean hasSpare() {
-        return results.size() == 2 && totalPins() == MAX_PINS_COUNT;
-    }
-
     private int totalPins() {
         return results.stream()
                 .mapToInt(PitchResult::fallenPins)
                 .sum();
     }
 
+    @Override
     public List<PitchResult> results() {
         return Collections.unmodifiableList(results);
     }
 
+    @Override
     public int number() {
         return number;
     }

@@ -4,18 +4,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class LastFrame {
+public class LastFrame implements Frame {
 
     private static final int MAX_PINS_COUNT = 10;
+    private static final int FRAME_NUMBER = 10;
+    private static final int AVAILABLE_COUNT_WITHOUT_BONUS = 2;
+    private static final int AVAILABLE_COUNT_WITH_BONUS = 3;
 
-    private final int number;
     private final List<PitchResult> results;
 
     public LastFrame() {
-        this.number = 10;
         this.results = new ArrayList<>();
     }
 
+    @Override
     public void bowl(int fallenPins) {
         if (isEnd()) {
             throw new IllegalArgumentException();
@@ -46,11 +48,12 @@ public class LastFrame {
         return results.size() < 3 && (hasStrike() || hasSpare());
     }
 
+    @Override
     public boolean isEnd() {
         if (hasStrike() || hasSpare()) {
-            return results.size() == 3;
+            return results.size() == AVAILABLE_COUNT_WITH_BONUS;
         }
-        return results.size() == 2;
+        return results.size() == AVAILABLE_COUNT_WITHOUT_BONUS;
     }
 
     private boolean isSpare(int fallenPins) {
@@ -71,11 +74,13 @@ public class LastFrame {
                 .sum();
     }
 
+    @Override
     public List<PitchResult> results() {
         return Collections.unmodifiableList(results);
     }
 
+    @Override
     public int number() {
-        return number;
+        return FRAME_NUMBER;
     }
 }
